@@ -2,7 +2,7 @@
 ; Compile this script with Inno Setup
 
 #define MyAppName "Dufs"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "0.9.0"
 #define MyAppPublisher "Dufs Team"
 #define MyAppURL "https://github.com/sigoden/dufs"
 #define MyAppExeName "dufs.exe"

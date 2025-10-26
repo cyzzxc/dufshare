@@ -6,6 +6,10 @@ REM Default timeout in seconds
 set "DEFAULT_TIMEOUT=1800"
 set "TIMEOUT_SECONDS=%DEFAULT_TIMEOUT%"
 
+REM Default port configuration
+set "DEFAULT_PORT=5000"
+set "PORT=%DEFAULT_PORT%"
+
 REM Change to target directory if provided
 if not "%~1"=="" (
     cd /d "%~1" 2>nul || (
@@ -37,16 +41,31 @@ where dufs >nul 2>&1 || (
     )
 )
 
+REM Check port availability and find free port
+:CHECK_PORT
+netstat -ano | findstr ":%PORT% " | findstr "LISTENING" >nul 2>&1
+if !ERRORLEVEL! equ 0 (
+    echo Port !PORT! is already in use, trying next port...
+    set /a PORT+=1
+    if !PORT! gtr 65535 (
+        echo Error: No available ports found.
+        pause
+        exit /b 1
+    )
+    goto CHECK_PORT
+)
+
 REM Display startup info
 echo ================================================
 echo Dufs Server Starting...
 echo Working Directory: %CD%
+echo Port: !PORT!
 echo Auto-shutdown Timer: !TIMEOUT_SECONDS! seconds
 echo ================================================
 echo.
 
-REM Start dufs in background with config file
-start /b "" "!DUFS_CMD!" --config "!CONFIG_FILE!"
+REM Start dufs in background with config file and port
+start /b "" "!DUFS_CMD!" --port !PORT! --config "!CONFIG_FILE!"
 set "DUFS_PID=!ERRORLEVEL!"
 
 REM Wait for timeout then kill the process
