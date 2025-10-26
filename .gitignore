@@ -14,3 +14,9 @@ dufs.exe
 # System files
 Thumbs.db
 .DS_Store
+
+# AI tools
+.claude/
+.spec-workflow/
+.cursor/
+.aider*
