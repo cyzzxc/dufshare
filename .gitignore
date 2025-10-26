@@ -1,0 +1,16 @@
+# Build output
+output/
+
+# Binary file (download from official release)
+dufs.exe
+
+# Source files (keep converted ICO)
+*.svg
+
+# IDE
+.vscode/
+.idea/
+
+# System files
+Thumbs.db
+.DS_Store
