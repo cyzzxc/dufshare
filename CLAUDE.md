@@ -11,9 +11,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```
 dufstray/
 ├── setup.iss              # Inno Setup 安装脚本
-├── dufs-launcher.bat      # 批处理启动器
+├── dufs-launcher.bat      # 批处理启动器(带自动关闭)
+├── config.yaml            # 配置文件(可选)
 ├── dufs.exe               # Dufs 可执行文件 (需从官方下载)
-├── favicon.ico          # 右键菜单图标 (从 SVG 转换)
+├── favicon.ico            # 右键菜单图标 (从 SVG 转换)
 ├── .gitignore             # Git 忽略规则
 └── CLAUDE.md              # 本文档
 ```
@@ -43,10 +44,27 @@ Pascal 代码自动管理系统 PATH:
 
 ### 启动脚本逻辑 (dufs-launcher.bat)
 
-1. 接收路径参数并切换工作目录 (`cd /d`)
-2. 智能查找 dufs.exe (优先 PATH,备用安装目录)
-3. 启动 dufs 服务
-4. 错误处理和用户提示
+1. **接收路径参数**: 切换到目标工作目录 (`cd /d`)
+2. **读取配置文件**: 从安装目录的 `config.yaml` 读取 `auto_shutdown_seconds`
+3. **默认超时设置**: 测试阶段默认 10 秒,生产环境建议 1800 秒(30分钟)
+4. **智能查找 dufs.exe**: 优先 PATH,备用安装目录
+5. **后台启动服务**: 使用 `start /b` 后台运行 dufs
+6. **自动关闭定时器**: 使用 `timeout` 命令倒计时
+7. **强制停止进程**: 超时后使用 `taskkill /f` 强制关闭 dufs.exe
+8. **错误处理**: 完善的目录访问和命令查找错误提示
+
+### 配置文件 (config.yaml)
+
+放置在安装目录(与 dufs-launcher.bat 同目录),用于自定义设置:
+
+```yaml
+# 自动关闭时间(秒)
+# 测试: 10
+# 生产: 1800 (30分钟)
+auto_shutdown_seconds: 1800
+```
+
+**优先级**: config.yaml > 脚本默认值(10秒)
 
 ## 常用命令
 
@@ -73,6 +91,15 @@ output\dufs-setup.exe  # 需管理员权限
 ```
 
 ## 快速修改
+
+### 自动关闭时间
+```batch
+set "DEFAULT_TIMEOUT=10"  # dufs-launcher.bat:6 (脚本默认值)
+```
+或在安装目录创建 `config.yaml`:
+```yaml
+auto_shutdown_seconds: 1800  # 30分钟
+```
 
 ### 版本号
 ```pascal

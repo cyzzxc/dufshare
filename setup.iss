@@ -42,6 +42,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: "dufs.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "dufs-launcher.bat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "favicon.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "config.yaml"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
